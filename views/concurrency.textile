@@ -1,0 +1,20 @@
+h1. Содержание
+# Введение
+## Книга
+## Concurrency or Parallelism?
+# Threads and Syncronization
+## Суть
+## Пример
+## Достоинства/недостатки
+# Functional programming
+# Actors
+# CSP
+# The Lambda Architecture
+# Прочее (Data Parallelism и т.п.)
+# Выводы
+
+h1. Введение
+
+h2. Книга
+
+Данная статья является кратким обзором книги "Seven Concurrency Models In Seven Weeks":http://www.amazon.com/Seven-Concurrency-Models-Weeks-Programmers/dp/1937785653.
