@@ -155,14 +155,37 @@ h2. Функциональное программирование
 
 Для решения нашей задачи мы воспользуемся нововведениями в Java 8, известными как Project Lambda.
 
+<source lang="Java">
+    ...
+    //Здесь мы получаем параллельный Stream, из которого будем 
+    Stream<Page> pages = getPages(url);
+
+    Map<String, Integer> result = pages.parallelStream()
+        .map(page -> page.getWords()
+            .stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.summingInt(x -> 1)))
+        ).reduce((acc, wc) -> {
+          wc.forEach((word, count) -> acc.merge(word, count, Integer::sum));
+          return acc;
+        }).get();
+    System.out.printf("Result: %s\n",result);
+    ...
+</source>
+
 h3. Достоинства и недостатки
 
 Программы в функциональном стиле как правило более выразительны
 
 h2. Модель Акторов
 
-__схема
+__схема__
 
 h2. Communicating sequentional processes
+
+Основное отличие от модели акторов.
+
+__схема__
+
+h2. Лямбда-архитектура
 
 __схема__
