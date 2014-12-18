@@ -2,7 +2,7 @@
 %html{:lang => "en"}
   %head
     %meta{:charset => "utf-8"}/
-    %title reveal.js - The HTML Presentation Framework
+    %title Java 8 и функциональное программирование
     %meta{:content => "A framework for easily creating beautiful presentations using HTML", :name => "description"}/
     %meta{:content => "Hakim El Hattab", :name => "author"}/
     %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
@@ -12,17 +12,6 @@
     %link#theme{:href => "css/theme/moon.css", :rel => "stylesheet"}/
     / For syntax highlighting
     %link{:href => "lib/css/zenburn.css", :rel => "stylesheet"}/
-    / If the query includes 'print-pdf', include the PDF print sheet
-    :javascript
-      if( window.location.search.match( /print-pdf/gi ) ) {
-      	var link = document.createElement( 'link' );
-      	link.rel = 'stylesheet';
-      	link.type = 'text/css';
-      	link.href = 'css/print/pdf.css';
-      	document.getElementsByTagName( 'head' )[0].appendChild( link );
-      }
-    /[if lt IE 9]
-      <script src="lib/js/html5shiv.js"></script>
   %body
     .reveal
       / Any section element inside of this container is displayed as a slide
@@ -30,6 +19,251 @@
         %section
           %h1 Java 8
           %h5 и функциональное программирование
+
+        %section
+          %h2 Project Lambda (JSR-335)
+          %ol
+            %li.fragment First-class functions in java
+            %li.fragment Ссылки на метод
+
+        %section
+          %h3 Функциональные литералы
+          .fragment
+            %code
+              (String x, String y) -> x.equals(y)
+          .fragment
+            %code
+              (x, y) -> x.equals(y)
+          .fragment
+            %code
+              x -> x.isEmpty()
+          .fragment
+            %code
+              () -> Integer.valueOf(42)
+
+        %section
+          %h3 Указатели на методы
+          .fragment
+            %pre
+              %code
+                :preserve
+                  Integer::sum      ==    (x, y) -> Integer.sum(x,y)
+          .fragment
+            %pre
+              %code
+                :preserve
+                  String::length    ==    s -> s.length
+          .fragment
+            %pre
+              %code
+                :preserve
+                  String s = "Some string";
+                  s::indexOf        ==    c -> s.indexOf(c)
+
+        %section
+          %h4 Какого же типа должна быть переменная, которой мы присваиваем функциональный литерал?
+          %h4.fragment Какого угодно, если тип переменной удовлетворяет критерию функционального интерфейса!
+          %h4.fragment Функциональный интерфейс - один абстрактный метод!
+          .fragment
+            %pre
+              %code
+                :preserve
+                  @FunctionalInterface
+                  public interface Runnable {
+                      void run();
+                  }
+
+        %section
+          %h3 Новые функциональные интерфейсы Java 8
+          .fragment
+            %pre
+              %code
+                :preserve
+                  @FunctionalInterface
+                  public interface Function&lt;T, R&gt; {
+                      R apply(T t);
+                  }
+          .fragment
+            %pre
+              %code
+                :preserve
+                  @FunctionalInterface
+                  public interface Predicate&lt;T&gt; {
+                      boolean test(T t);
+                  }
+          .fragment
+            %pre
+              %code
+                :preserve
+                  @FunctionalInterface
+                  public interface Consumer&lt;T&gt; {
+                      void accept(T t);
+                  }
+          .fragment
+            %pre
+              %code
+                :preserve
+                  @FunctionalInterface
+                  public interface Supplier&lt;T&gt; {
+                      T get();
+                  }
+
+        %section
+          %h2 Некоторые паттерны использования
+
+        %section
+          %h3 Execute around
+          %pre
+            %code
+              :preserve
+                public void doSomeHardWork (Consumer<SomeType> consumer) {
+                    SomeType something = new SomeType();
+                    //Initialization of something
+                    consumer.accept(something);
+                    //Finalization of something
+                }
+                ...
+                doSomeHardWork(s -> s.oneThing());
+                ...
+                doSomeHardWork(s -> s.anotherThing());
+        %section
+          %h3 Lazy evaluation
+          .fragment
+            %p Было
+            %pre
+              %code
+                :preserve
+                  if (logger.isLoggable(Log.FINER)) {
+                    logger.finer(generateSomeLogMessage())
+                  }
+          .fragment
+            %p стало
+            %pre
+              %code
+                :preserve
+                  log(Log.FINER, () -> generateSomeLogMessage())
+
+        %section
+          %h1 Stream API
+          %p новый подход к работе с коллекциями
+
+        %section
+          %h3 Сравнение Collections и Stream API
+          %p.fragment Задача: сгруппировать транзакции с суммой более 1000 у.е. по валютам
+          .fragment
+            %p Collections style
+            %pre
+              %code
+                :preserve
+                  Map&lt;Currency, List&lt;Transaction>> txnsByCurrencies = new HashMap&lt;>();
+                  for (Transaction txn : txnList) {
+                    if (txn.getPrice() > 1000) {
+                      Currency currency = txn.getCurrency();
+                      List&lt;Transaction> txnsForCurrency = txnsByCurrencies.get(currency);
+                      if (txnsForCurrency == null) {
+                        txnsForCurrency = new ArrayList&lt;>();
+                        txnsByCurrencies.put(currency, txnsForCurrency);
+                      }
+                      txnsForCurrency.add(txn);
+                    }
+                  }
+          .fragment
+            %p Stream style
+            %pre
+              %code
+                :preserve
+                  Map&lt;Currency, List&lt;Transaction>> txnsByCurrencies = txnList
+                      .stream()
+                      .filter(t -> t.getPrice() > 1000)
+                      .collect(Collectors.groupingBy(Transaction::getCurrency));
+
+        %section
+          %h3 Collections API
+          %ol
+            %li.fragment Данные хранятся в памяти
+            %li.fragment Внешнее управление итерациями
+            %li.fragment Можно перебирать сколько угодно раз
+
+        %section
+          %h3 Stream API
+          %ol
+            %li.fragment Новые данные поступают по требованию
+            %li.fragment Внутреннее управление итерациями
+            %li.fragment Можно перебрать только один раз
+        
+        %section
+          %h3 Способы создания Stream-ов
+          %ol
+            %li.fragment
+              %code Stream.of("Streams", "are", "cooler", "than", "collections")
+            %li.fragment
+              %code Stream.empty()
+            %li.fragment
+              %code collection.stream()
+            %li.fragment
+              %code Arrays.stream(new int[] {1, 3, 5, 7, 9})
+            %li.fragment
+              %code Files.lines(Paths.get("war_and_peace.txt"))
+            %li.fragment
+              %code Stream.iterate(0, n -> n + 2)
+            %li.fragment
+              %code Stream.generate(Math::random) //Supplier<T>
+
+        %section
+          %p java.util.stream.Stream&lt;T&gt
+          .fragment
+            %p java.util.stream.IntStream
+            %p java.util.stream.LongStream
+            %p java.util.stream.DoubleStream
+
+        %section
+          %h3 Промежуточные операции
+          %ol
+            %li.fragment filter
+            %li.fragment limit
+            %li.fragment map
+            %li.fragment flatMap
+            %li.fragment sorted
+            %li.fragment distinct
+
+        %section
+          %h3 Терминальные операции
+          %ol
+            %li.fragment reduce
+            %li.fragment count
+            %li.fragment forEach
+            %li.fragment collect
+
+        %section
+          %h3 Коллекторы
+
+        %section
+          %h3 Параллельная обработка
+
+        %section
+          %h3 combiner
+
+        %section
+          %h3 Fork Join Pool
+
+        %section
+          %h3 Optional&lt;T> - элегантный способ избежать NPE
+
+        %section
+          %h2 Функциональное программирование в Java 8
+
+        %section
+          %h3 Прочие нововведения
+          %ol
+            %li.fragment default методы в интерфейсах
+            %li.fragment Spliterator
+            %li.fragment CompletableFuture
+            %li.fragment new Date and Time API
+            %li.fragment ... и много чего еще, смотри https://mango.qiwi.com/mlink/feed/NDQ1NzEw
+
+        %section
+          %h1 ВСЕМ СПАСИБО!
+
         %section
           %ol
             %li Что такое функциональное программирование, отличие от императивного?
@@ -38,7 +272,7 @@
             %li Как реализованы функции высшего порядка в Java 8
             %li Стримы: объектные и числовые
             %li MapReduce с помощью стримов
-            %li Промежуточные (filter, limit, map, sorted, distinct) и терминальные (reduce, collect, count, forEach) операции
+            %li Промежуточные () и терминальные (reduce, collect, count, forEach) операции
             %li Параллельная обработка стримов, fork-join pool, использование combiner-а
             %li Класс Optional
             %li Карринг
