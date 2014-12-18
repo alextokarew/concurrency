@@ -158,7 +158,7 @@ h2. Функциональное программирование
 <source lang="Java">
     ...
     //Здесь мы получаем параллельный Stream, из которого будем 
-    Stream<Page> pages = getPages(url);
+    List<Page> pages = getPages(url);
 
     Map<String, Integer> result = pages.parallelStream()
         .map(page -> page.getWords()
