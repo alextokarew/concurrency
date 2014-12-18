@@ -11,3 +11,7 @@ end
 get '/java8.html' do
   haml :java8
 end
+
+get '/test' do
+  erb :index
+end

@@ -1,19 +1,49 @@
-!!!
-%html
+<!doctype html>
+%html{:lang => "en"}
   %head
-    %title Java 8 и функциональное программирование
+    %meta{:charset => "utf-8"}/
+    %title reveal.js - The HTML Presentation Framework
+    %meta{:content => "A framework for easily creating beautiful presentations using HTML", :name => "description"}/
+    %meta{:content => "Hakim El Hattab", :name => "author"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black-translucent", :name => "apple-mobile-web-app-status-bar-style"}/
+    %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}/
+    %link{:href => "css/reveal.min.css", :rel => "stylesheet"}/
+    %link#theme{:href => "css/theme/moon.css", :rel => "stylesheet"}/
+    / For syntax highlighting
+    %link{:href => "lib/css/zenburn.css", :rel => "stylesheet"}/
+    / If the query includes 'print-pdf', include the PDF print sheet
+    :javascript
+      if( window.location.search.match( /print-pdf/gi ) ) {
+      	var link = document.createElement( 'link' );
+      	link.rel = 'stylesheet';
+      	link.type = 'text/css';
+      	link.href = 'css/print/pdf.css';
+      	document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    /[if lt IE 9]
+      <script src="lib/js/html5shiv.js"></script>
   %body
-    %h1 Java 8 и функциональное программирование
-    %h2 Содержание
-    %ol
-      %li Что такое функциональное программирование, отличие от императивного?
-      %li First-class функции в java, функциональные интерфейсы
-      %li Способы задания функций в яве: функциональные литералы и ссылки на методы(3 типа)
-      %li Как реализованы функции высшего порядка в Java 8
-      %li Стримы: объектные и числовые
-      %li MapReduce с помощью стримов
-      %li Промежуточные (filter, limit, map, sorted, distinct) и терминальные (reduce, collect, count, forEach) операции
-      %li Параллельная обработка стримов, fork-join pool, использование combiner-а
-      %li Класс Optional
-      %li Карринг
-      %li Pattern Matching
+    .reveal
+      / Any section element inside of this container is displayed as a slide
+      .slides
+        %section
+          %h1 Java 8
+          %h5 и функциональное программирование
+        %section
+          %ol
+            %li Что такое функциональное программирование, отличие от императивного?
+            %li First-class функции в java, функциональные интерфейсы
+            %li Способы задания функций в яве: функциональные литералы и ссылки на методы(3 типа)
+            %li Как реализованы функции высшего порядка в Java 8
+            %li Стримы: объектные и числовые
+            %li MapReduce с помощью стримов
+            %li Промежуточные (filter, limit, map, sorted, distinct) и терминальные (reduce, collect, count, forEach) операции
+            %li Параллельная обработка стримов, fork-join pool, использование combiner-а
+            %li Класс Optional
+            %li Карринг
+            %li Pattern Matching
+
+    %script{:type => "text/javascript", :src => "lib/js/head.min.js"}
+    %script{:type => "text/javascript", :src => "js/reveal.min.js"}
+    %script{:type => "text/javascript", :src => "js/init.js"}
