@@ -29,17 +29,32 @@
         %section
           %h3 Функциональные литералы
           .fragment
-            %code
-              (String x, String y) -> x.equals(y)
+            %pre
+              %code
+                :preserve
+                  (String x, String y) -> {
+                      return x.equals(y);
+                  }
           .fragment
-            %code
-              (x, y) -> x.equals(y)
+            %pre
+              %code
+                :preserve
+                  (String x, String y) -> x.equals(y)
           .fragment
-            %code
-              x -> x.isEmpty()
+            %pre
+              %code
+                :preserve
+                  (x, y) -> x.equals(y)
           .fragment
-            %code
-              () -> Integer.valueOf(42)
+            %pre
+              %code
+                :preserve
+                  x -> x.isEmpty()
+          .fragment
+            %pre
+              %code
+                :preserve
+                  () -> Integer.valueOf(42)
 
         %section
           %h3 Указатели на методы
@@ -116,7 +131,7 @@
           %pre
             %code
               :preserve
-                public void doSomeHardWork (Consumer<SomeType> consumer) {
+                public void doSomeHardWork (Consumer&lt;SomeType> consumer) {
                     SomeType something = new SomeType();
                     //Initialization of something
                     consumer.accept(something);
@@ -148,8 +163,26 @@
           %p новый подход к работе с коллекциями
 
         %section
-          %h3 Сравнение Collections и Stream API
-          %p.fragment Задача: сгруппировать транзакции с суммой более 1000 у.е. по валютам
+          %h3 Collections API
+          %ol
+            %li.fragment Фокус на способах хранения данных
+            %li.fragment Данные хранятся в памяти
+            %li.fragment Изменяемая структура
+            %li.fragment Внешнее управление итерациями
+            %li.fragment Можно перебирать сколько угодно раз
+
+        %section
+          %h3 Stream API
+          %ol
+            %li.fragment Фокус на операциях обработки данных
+            %li.fragment Новые данные поступают по требованию
+            %li.fragment Источник данных неизменяем
+            %li.fragment Внутреннее управление итерациями
+            %li.fragment Можно перебрать только один раз
+
+        %section
+          %h3 Пример сравнения Collections и Stream API
+          %p.fragment Задача: сгруппировать транзакции с суммой более 1000₽ по валютам
           .fragment
             %p Collections style
             %pre
@@ -176,20 +209,6 @@
                       .stream()
                       .filter(t -> t.getPrice() > 1000)
                       .collect(Collectors.groupingBy(Transaction::getCurrency));
-
-        %section
-          %h3 Collections API
-          %ol
-            %li.fragment Данные хранятся в памяти
-            %li.fragment Внешнее управление итерациями
-            %li.fragment Можно перебирать сколько угодно раз
-
-        %section
-          %h3 Stream API
-          %ol
-            %li.fragment Новые данные поступают по требованию
-            %li.fragment Внутреннее управление итерациями
-            %li.fragment Можно перебрать только один раз
         
         %section
           %h3 Способы создания Stream-ов
@@ -219,27 +238,118 @@
         %section
           %h3 Промежуточные операции
           %ol
-            %li.fragment filter
-            %li.fragment limit
-            %li.fragment map
-            %li.fragment flatMap
-            %li.fragment sorted
-            %li.fragment distinct
+            %li.fragment 
+              %p filter - фильтрация элементов
+              %pre
+                %code
+                  stream.filter(x -> x > 1000)
+            %li.fragment 
+              %p limit - ограничение числа элементов
+              %pre
+                %code
+                  stream.limit(5)
+            %li.fragment 
+              %p map - преобразование элементов
+              %pre
+                %code
+                  stream.map(x -> x * x + 2 * x + 10)
+            %li.fragment 
+              %p flatMap - преобразование наборов элементов
+              %pre
+                %code
+                  :preserve
+                    sentences.stream()
+                             .map(w -> w.split("\s+"))
+                             .flatMap(Arrays::stream)
+            %li.fragment 
+              %p sorted - сортировка по указанному признаку
+              %pre
+                %code
+                  stream.sorted(comparing(String::length))
+            %li.fragment 
+              %p distinct - исключение одинаковых элементов
+              %pre
+                %code
+                  words.stream().distinct()
 
         %section
           %h3 Терминальные операции
           %ol
-            %li.fragment reduce
-            %li.fragment count
-            %li.fragment forEach
-            %li.fragment collect
+            %li.fragment 
+              %p reduce - свертка в одно значение
+              %pre
+                %code
+                  numbers.reduce(0, (acc, x) -> acc + x)
+            %li.fragment
+              %p count, sum, max, min
+              %pre
+                %code
+                  words.count()
+            %li.fragment
+              %p anyMatch, allMatch, noneMatch - проверяет элементы
+              %pre
+                %code
+                  numbers.anyMatch(x -> x % 10 == 0)
+            %li.fragment
+              %p findAny, findFirst
+              %pre
+                %code
+                  :preserve
+                    numbers.filter(x -> x % 10 == 0)
+                           .findAny()
+                           .ifPresent(x -> System.out.prinlf("Found: %d\n", x))
+            %li.fragment
+              %p forEach - перебор всех элементов
+              %pre
+                %code
+                  words.forEach(System.out::println)
+            %li.fragment 
+              %p collect - обобщенная свертка 
+              %pre
+                %code
+                  words.collect(groupingBy(word -> word.substring(0,1)))
 
         %section
           %h3 Коллекторы
+          .fragment
+            %code java.util.stream.Collectors
+          .fragment
+            %ol
+              %li
+                %code Collectors.counting()
+              %li.fragment
+                %code Collectors.maxBy(comparator)
+              %li.fragment
+                %code Collectors.summingInt(x -> x.getInt()), Collectors.averagingInt(x -> x.getInt())
+              %li.fragment
+                %code Collectors.joining(separator)
+              %li.fragment
+                %code Collectors.groupingBy(x -> x.getComeCategory())
+              %li.fragment
+                %code Collectors.partitioningBy(predicate)
+              %li.fragment
+                %code Collectors.reducing(init, valueGetter, aggregator)
 
         %section
           %h3 Параллельная обработка
-
+          .fragment
+            %pre
+              %code
+                :preserve
+                  LongStream.rangeClosed(1L, 10_000_000_000L)
+                            .filter(l -> l % 2 ==0)
+                            .reduce(0L, Long::sum);
+            %p 14,4 секунды на 8 ядрах
+          .fragment vs
+          .fragment
+            %pre
+              %code
+                :preserve
+                  LongStream.rangeClosed(1L, 10_000_000_000L)
+                            .filter(l -> l % 2 == 0)
+                            .parallel()
+                            .reduce(0L, Long::sum);
+            %p 5,8 секунд на 8 ядрах
         %section
           %h3 combiner
 

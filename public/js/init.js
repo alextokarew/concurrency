@@ -1,7 +1,7 @@
 window.onload = function() {
     Reveal.initialize({
-        controls: true,
-        progress: true,
+        controls: false,
+        progress: false,
         history: true,
         center: true,
 
