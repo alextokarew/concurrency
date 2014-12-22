@@ -350,8 +350,26 @@
                             .parallel()
                             .reduce(0L, Long::sum);
             %p 5,8 секунд на 8 ядрах
+        
         %section
-          %h3 combiner
+          %h3 Особенности параллельной обработки
+          %h4.fragment 1. Нужно учитывать источник данных
+          %p.fragment Хорошо параллелизуются: ArrayList, IntStream.range(), HashSet, TreeSet
+          %p.fragment Плохо параллелизуются: Stream.iterate(), LinkedList
+
+
+        %section
+          %h4 2. Комбинирование результатов параллельной обработки
+          .fragment
+            %pre
+              %code
+                :preserve
+                  Bad code
+          .fragment
+            %pre
+              %code
+                :preserve
+                  Good code
 
         %section
           %h3 Fork Join Pool
