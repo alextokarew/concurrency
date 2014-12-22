@@ -359,20 +359,26 @@
 
 
         %section
-          %h4 2. Комбинирование результатов параллельной обработки
+          %h4 2. Использовать Thread-Safe консрукции
           .fragment
             %pre
               %code
                 :preserve
-                  Bad code
-          .fragment
-            %pre
-              %code
-                :preserve
-                  Good code
+                  public class Accumulator {
+                     public long total = 0;
+                     public void add(long value) {total += value; }
+                  }
+                  ...
+                  Accumulator acc = new Accumulator();
+                  LongStream.rangeClosed(1,n).parallel().forEach(acc::add);
+                  return acc.total;
 
         %section
           %h3 Fork Join Pool
+          %img 
+
+        %section
+          %h3 Work Stealing
 
         %section
           %h3 Optional&lt;T> - элегантный способ избежать NPE
