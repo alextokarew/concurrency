@@ -375,13 +375,60 @@
 
         %section
           %h3 Fork Join Pool
-          %img 
+          %img(src='img/forkjoin.png')
 
         %section
           %h3 Work Stealing
+          %img(src='img/workStealing.png')
 
         %section
           %h3 Optional&lt;T> - элегантный способ избежать NPE
+          %ol
+            %li.fragment
+              %code Optional.empty()
+            %li.fragment
+              %code Optional.of(object) //throws NPE
+            %li.fragment
+              %code Optional.ofNullable(object)
+
+        %section
+          %h3 Получение значений из Optional
+          %ol
+            %li.fragment
+              %code get() // throws NoSuchElementException
+            %li.fragment
+              %code orElse(T other)
+            %li.fragment
+              %code orElseGet(Supplier&lt;? extends T>)
+            %li.fragment
+              %code ifPresent(Consumer&lt;? supre T> consumer)
+
+        %section
+          %h3 Optional - пример
+          .fragment
+            %p Было
+            %pre
+              %code
+                :preserve
+                  if (person != null) {
+                    Profile profile = person.getProfile();
+                    if (profile != null) {
+                      Photo photo = profile.getPhoto();
+                        if (photo != null) {
+                          return photo.getUrl();
+                        }
+                    }
+                  }
+                  return "Not found";
+          .fragment
+            %p Стало
+            %pre
+              %code
+                :preserve
+                  optPerson.flatMap(Person::getProfile)
+                           .flatMap(Profile::getPhoto)
+                           .map(Photo::getUrl)
+                           .orElse("Not found")
 
         %section
           %h2 Функциональное программирование в Java 8
