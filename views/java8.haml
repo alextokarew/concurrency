@@ -432,6 +432,75 @@
 
         %section
           %h2 Функциональное программирование в Java 8
+          %ol
+            %li.fragment Композиция функций
+            %li.fragment Рекурсия
+            %li.fragment Currying
+
+        %section
+          %h3 Композиция функций
+          %pre
+            %code
+              :preserve
+                Function&lt;Integer, Integer> f = x -> x + 1;
+                Function&lt;Integer, Integer> g = x -> x * 2;
+                Function&lt;Integer, Integer> h = f.andThen(g);  // g(f(x))
+                Function&lt;Integer, Integer> c = f.compose(g);  // f(g(x))
+          .fragment
+            %h3 Композиция предикатов
+            %pre
+              %code
+                :preserve
+                  Predicate&lt;Txn> rubles = txn -> txn.getCurrency() == RUR;
+                  Predicate&lt;Txn> notRubles = rubles.negate();
+                  Predicate&lt;Txn> manyRubles = rubles.and(txn -> txn.getAmount() > 5000);
+                  Predicate&lt;Txn> manyRublesOrBucks = rubles.or(txn -> txn.getCurrency() == USD)
+                                                           .and(txn -> txn.getAmount() > 5000);
+        %section
+          %h3 Рекурсия
+          .fragment
+            %p Пример рекурсии
+            %pre
+              %code
+                :preserve
+                  public long factorial(long n) {
+                    return n == 1 ? 1 : n*factorial(n-1)
+                  }
+          .fragment
+            %p Пример tail-рекурсии
+            %pre
+              %code
+                :preserve
+                  public long factorial(long n) {
+                    return factorialTail(1, n)
+                  }
+                  private long factorialTail(long acc, long n) {
+                    return n == 1 ? acc : factorialTail(acc * n, n - 1)
+                  }
+          %p.fragment К сожалению, оптимизации tail-рекусии в Java 8 нет :(((
+
+        %section
+          %h3 Currying (частичное применение функций)
+          .fragment
+            %pre
+              %code
+                :preserve
+                  static double converter(double x, double factor, double bias) {
+                    return factor * x + bias;
+                  }
+          .fragment
+            %pre
+              %code
+                :preserve
+                  static DoubleUnaryOperator curriedConverter(double factor, double bias) {
+                    return (double x) -> converter(x, factor, bias)
+                  }
+          .fragment
+            %pre
+              %code
+                :preserve
+                  DoubleUnaryOperator convertCtoF = curriedConverter(9.0/5, 32);
+                  DoubleUnaryOperator convertUSDtoRUR = curriedConverter(70.5, 0);
 
         %section
           %h3 Прочие нововведения
@@ -440,24 +509,13 @@
             %li.fragment Spliterator
             %li.fragment CompletableFuture
             %li.fragment new Date and Time API
-            %li.fragment ... и много чего еще, смотри https://mango.qiwi.com/mlink/feed/NDQ1NzEw
+            %li.fragment 
+              %p ... и много чего еще, смотри https://mango.qiwi.com/mlink/feed/NDQ1NzEw
+              %img(src='img/mango.png')
+
 
         %section
           %h1 ВСЕМ СПАСИБО!
-
-        %section
-          %ol
-            %li Что такое функциональное программирование, отличие от императивного?
-            %li First-class функции в java, функциональные интерфейсы
-            %li Способы задания функций в яве: функциональные литералы и ссылки на методы(3 типа)
-            %li Как реализованы функции высшего порядка в Java 8
-            %li Стримы: объектные и числовые
-            %li MapReduce с помощью стримов
-            %li Промежуточные () и терминальные (reduce, collect, count, forEach) операции
-            %li Параллельная обработка стримов, fork-join pool, использование combiner-а
-            %li Класс Optional
-            %li Карринг
-            %li Pattern Matching
 
     %script{:type => "text/javascript", :src => "lib/js/head.min.js"}
     %script{:type => "text/javascript", :src => "js/reveal.min.js"}
