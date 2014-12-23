@@ -10,6 +10,30 @@
   font-weight: normal;
   font-style: normal; }
 
+@font-face {
+      font-family: 'WhitneyBook';
+      src: url("../../font/Whitney-Book.eot?6946176");
+      src: url("../../font/Whitney-Book.eot?6946176#iefix") format('embedded-opentype'), url("../../font/Whitney-Book.woff?6946176") format('woff'), url("../../font/Whitney-Book.ttf?6946176") format('truetype');
+      font-weight: normal;
+      font-style: normal;
+}
+ 
+@font-face {
+      font-family: 'WhitneyLight';
+      src: url("../../font/Whitney-Light.eot?6946176");
+      src: url("../../font/Whitney-Light.eot?6946176#iefix") format('embedded-opentype'), url("../../font/Whitney-Light.woff?6946176") format('woff'), url("../../font/Whitney-Light.ttf?6946176") format('truetype');
+      font-weight: normal;
+      font-style: normal;
+}
+ 
+@font-face {
+      font-family: 'MoreBold';
+      src: url("../../font/MorePro-Bold.eot?6946176");
+      src: url("../../font/MorePro-Bold.eot?6946176#iefix") format('embedded-opentype'), url("../../font/MorePro-Bold.woff?6946176") format('woff'), url("../../font/MorePro-Bold.ttf?6946176") format('truetype');
+      font-weight: normal;
+      font-style: normal;
+}
+
 /**
  * Solarized colors by Ethan Schoonover
  */
@@ -47,10 +71,9 @@ body {
 .reveal h6 {
   margin: 0 0 20px 0;
   color: #eee8d5;
-  font-family: "League Gothic", Impact, sans-serif;
-  line-height: 0.9em;
+  font-family: "MoreBold", Impact, sans-serif;
+  line-height: 1.1em;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
   text-shadow: none; }
 
 .reveal h1 {
